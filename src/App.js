@@ -7,6 +7,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<StartPage />} />
+
       <Route path="/playgame" element={<MainPage />} />
     </Routes>
   );

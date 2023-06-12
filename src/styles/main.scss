@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Coiny&family=Jua&display=swap");
+
+.backgroud-card {
+  text-align: center;
+  color: white;
+  padding-top: 10%;
+}
+
+.backgroud-card h1 .up {
+  -webkit-text-stroke: 5px rgb(255, 77, 46);
+  font-size: 100px;
+  letter-spacing: -15px;
+  padding: 10px;
+}
+
+.backgroud-card h1 {
+  font-family: "Coiny", cursive;
+  -webkit-text-stroke: 1.5px rgb(0, 0, 0);
+}
+
+.backgroud-card h1 .down {
+  -webkit-text-stroke: 5px rgb(64, 134, 255);
+  font-size: 100px;
+  letter-spacing: -12px;
+}
+
+.backgroud-card h2 {
+  margin-top: 10%;
+  font-size: 40px;
+  -webkit-text-stroke: 2px rgb(0, 0, 0);
+  font-family: "Coiny", cursive;
+}
+
+.backgroud-card form div {
+  border: 3px solid black;
+  width: 200px;
+  margin: 0 auto;
+  justify-content: center;
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.backgroud-card form input {
+  padding: 10px;
+  width: 100px;
+  font-size: 32px;
+  border: none;
+  outline: none;
+  border-right: 3px solid black;
+  text-align: center;
+  &::-webkit-inner-spin-button {
+    appearance: none;
+  }
+}
+
+.backgroud-card button {
+  width: 100px;
+  border: none;
+  color: rgb(0, 0, 0);
+  background: inherit;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: "Jua", sans-serif;
+  padding-top: 5px;
+  cursor: pointer;
+  &:hover {
+    background: rgb(186, 186, 186);
+  }
+}
+
+svg {
+  color: rgb(0, 0, 0);
+}
+
+.backgroud-card p {
+  color: black;
+  font-size: 32px;
+  font-family: "Jua", sans-serif;
+}
+
+.restart {
+  text-align: center;
+  margin-top: 10%;
+
+  button + button {
+    margin: 10px;
+  }
+}
+
+.restart button {
+  width: 200px;
+  border: 3px solid black;
+  border-radius: 10px;
+  color: rgb(0, 0, 0);
+  background: inherit;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: "Jua", sans-serif;
+  padding-top: 5px;
+  letter-spacing: 2px;
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(186, 186, 186);
+  }
+}
