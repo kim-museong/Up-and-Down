@@ -13,16 +13,58 @@ const GameSettingBox = styled.div`
 const GameSetting = styled.div`
   background: white;
   width: 30%;
-  margin: 20% auto;
+  margin: 10% auto;
   padding: 20px;
   border-radius: 10px;
   h1 {
-    margin: 0;
+    margin-top: 0;
     color: white;
     -webkit-text-stroke: 5px black;
     font-size: 60px;
     padding: 10px;
     font-family: "Coiny", cursive;
+  }
+
+  .select {
+    display: flex;
+    justify-content: center;
+    align-item: center;
+    font-family: "Jua", sans-serif;
+
+    span {
+      font-size: 24px;
+    }
+
+    select {
+      padding: 5px;
+      margin-left: 5px;
+    }
+  }
+
+  button,
+  a {
+    margin-top: 10%;
+    width: 200px;
+    border: 3px solid black;
+    border-radius: 10px;
+    color: rgb(0, 0, 0);
+    background: inherit;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: "Jua", sans-serif;
+    padding-top: 5px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    &:hover {
+      background: rgb(186, 186, 186);
+    }
+  }
+  a {
+    text-decoration: none;
+    display: inline-block;
+  }
+  button + a {
+    margin: 10px;
   }
 `;
 
@@ -30,7 +72,7 @@ const MainComponent = ({
   status,
   answer,
   answerCount,
-  returnFunc,
+  onSubmit,
   changeAnswer,
   onClick,
   selectedValue,
@@ -39,6 +81,11 @@ const MainComponent = ({
   GameStart,
   gameOver,
   reset,
+  playcount,
+  average,
+  winCount,
+  loseCount,
+  resetPlayCount,
 }) => {
   return (
     <>
@@ -46,15 +93,18 @@ const MainComponent = ({
         <GameSettingBox>
           <GameSetting>
             <h1>Setting</h1>
-            숫자설정
-            <select value={selectedValue} onChange={selectChange}>
-              <option value={10}>10</option>
-              <option value={30}>30</option>
-              <option value={50}>50</option>
-            </select>
+            <div className="select">
+              <span>숫자 범위설정 </span>
+              <select value={selectedValue} onChange={selectChange}>
+                <option value={10}>10</option>
+                <option value={30}>30</option>
+                <option value={50}>50</option>
+              </select>
+            </div>
+
             <div>
               <button onClick={GameStart}>게임시작</button>
-              <Link to="/">홈페이지</Link>
+              <Link to="/">취소</Link>
             </div>
           </GameSetting>
         </GameSettingBox>
@@ -63,7 +113,7 @@ const MainComponent = ({
       )}
 
       <div className="backgroud-card">
-        <form onSubmit={returnFunc}>
+        <form onSubmit={onSubmit}>
           <h1>
             <span className="up">Up</span> and
             <span className="down">Down</span>
@@ -97,6 +147,13 @@ const MainComponent = ({
       ) : (
         ""
       )}
+      <div>
+        승률 : {average}% 승: {winCount} 패: {loseCount}
+      </div>
+      <div>게임 총 횟수: {playcount}</div>
+      <div>
+        <button onClick={resetPlayCount}>초기화</button>
+      </div>
     </>
   );
 };

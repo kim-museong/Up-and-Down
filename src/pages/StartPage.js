@@ -5,7 +5,7 @@ const StartPage = () => {
     <>
       <div>
         <h1>시작 페이지</h1>
-        <Link to="/playgame">시작</Link>
+        <Link to="/playgame/UpAndDown">Up and DOWN </Link>
       </div>
     </>
   );
