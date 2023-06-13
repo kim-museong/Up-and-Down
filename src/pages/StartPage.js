@@ -5,7 +5,10 @@ const StartPage = () => {
     <>
       <div>
         <h1>시작 페이지</h1>
-        <Link to="/playgame/UpAndDown">Up and DOWN </Link>
+        <ul>
+          <Link to="/playgame/UpAndDown">Up and DOWN </Link>
+          <Link to="/playgame/Enforce">Inforce</Link>
+        </ul>
       </div>
     </>
   );
