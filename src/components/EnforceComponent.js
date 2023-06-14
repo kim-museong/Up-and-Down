@@ -1,6 +1,39 @@
 import { styled } from "styled-components";
 import { AiFillStar } from "react-icons/ai";
 
+const EnforceBox = styled.div`
+  position: absolute;
+  top: 10%;
+  left: 20%;
+  width: 60%;
+  margin: 10% auto;
+  border: 2px solid black;
+  text-align: center;
+  background: rgb(100, 100, 100);
+`;
+
+const Enfocedisplay = styled.div`
+  color: white;
+  div:first-child {
+    display: flex;
+    justify-content: center;
+    align-item: center;
+    svg {
+      color: yellow;
+      font-size: 25px;
+    }
+    p {
+      margin: 0;
+      font-size: 23px;
+      padding-left: 2px;
+      color: yellow;
+    }
+  }
+  p:first-child {
+    color: yellow;
+  }
+`;
+
 const EnforceComponent = ({
   EnforceNumber,
   onClick,
@@ -11,38 +44,6 @@ const EnforceComponent = ({
   damage,
   setDamage,
 }) => {
-  const EnforceBox = styled.div`
-    position: absolute;
-    top: 10%;
-    left: 20%;
-    width: 60%;
-    margin: 10% auto;
-    border: 2px solid black;
-    text-align: center;
-    background: rgb(100, 100, 100);
-  `;
-
-  const Enfocedisplay = styled.div`
-    color: white;
-    div:first-child {
-      display: flex;
-      justify-content: center;
-      align-item: center;
-      svg {
-        color: yellow;
-        font-size: 25px;
-      }
-      p {
-        margin: 0;
-        font-size: 23px;
-        padding-left: 2px;
-        color: yellow;
-      }
-    }
-    p:first-child {
-      color: yellow;
-    }
-  `;
   return (
     <EnforceBox>
       <h1>강화페이지</h1>

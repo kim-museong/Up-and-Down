@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EnforceComponent from "../components/EnforceComponent";
 
 const EnforceContainer = ({ gold, setGold, damage, setDamage }) => {
-  const [EnforceNumber, setEnforceNumber] = useState(0);
+  const [EnforceNumber, setEnforceNumber] = useState(() => {
+    const savedenforceNumber = localStorage.getItem("enforceNumber");
+    return savedenforceNumber ? parseInt(savedenforceNumber) : 0;
+  });
+
   const [Answer, setAnswer] = useState("");
 
+  //강화시 성공&실패
   const reinforce = () => {
     const probability = getProbability();
     const randomValue = Math.random();
@@ -12,15 +17,17 @@ const EnforceContainer = ({ gold, setGold, damage, setDamage }) => {
     if (randomValue < probability) {
       setAnswer("강화성공");
       setEnforceNumber((prev) => prev + 1);
-      setDamage(getDamage());
+      getDamage();
     } else {
       setAnswer("강화실패");
       if (EnforceNumber > 10 && EnforceNumber < 15) {
         setEnforceNumber((prev) => prev - 1);
+      } else if (EnforceNumber === 15) {
+        setEnforceNumber((prev) => prev);
       } else if (EnforceNumber > 15 && EnforceNumber < 20) {
         setEnforceNumber((prev) => prev - 1);
       }
-      setDamage(damage > 0 ? damage - 1 : 0); // 이전 공격력으로 돌아가기 (강화 실패 시 1 감소)
+      setDamage((prev) => prev - getDamageDecrease());
     }
   };
 
@@ -33,7 +40,7 @@ const EnforceContainer = ({ gold, setGold, damage, setDamage }) => {
     } else if (EnforceNumber >= 20 && EnforceNumber < 30) {
       return 1 - EnforceNumber * 0.039;
     } else {
-      return 0.1; // 30% 확률
+      return 0.3; // 30% 확률
     }
   };
 
@@ -61,26 +68,40 @@ const EnforceContainer = ({ gold, setGold, damage, setDamage }) => {
     }
   };
 
-  //강화단계별 공격력증가
+  //강화성공시 공격력증가
   const getDamage = () => {
-    let newDamage;
-    let prevDamage;
-
     if (EnforceNumber === 0) {
-      newDamage = 5;
-    } else if (EnforceNumber >= 1 && EnforceNumber <= 10) {
-      newDamage = damage + 10;
-    } else if (EnforceNumber >= 11 && EnforceNumber <= 20) {
-      newDamage = damage + 15;
+      setDamage((prev) => prev + 5);
+    } else if (EnforceNumber >= 1 && EnforceNumber < 10) {
+      setDamage((prev) => prev + 10);
+    } else if (EnforceNumber >= 10 && EnforceNumber <= 20) {
+      setDamage((prev) => prev + 15);
     } else if (EnforceNumber >= 21 && EnforceNumber <= 30) {
-      newDamage = damage + 30;
+      setDamage((prev) => prev + 30);
     }
-
-    // 실패하기 전의 공격력 저장
-    prevDamage = damage;
-
-    return newDamage;
   };
+
+  //실패시 하락
+  const getDamageDecrease = () => {
+    if (EnforceNumber === 0) {
+      return 0;
+    } else if (EnforceNumber >= 1 && EnforceNumber < 11) {
+      return 0;
+    } else if (EnforceNumber === 15) {
+      return 0;
+    } else if (EnforceNumber >= 11 && EnforceNumber <= 20) {
+      return 15;
+    } else if (EnforceNumber >= 21 && EnforceNumber <= 30) {
+      return 30;
+    }
+  };
+
+  //localstorage저장 //나중에 redux로 변경예정
+  useEffect(() => {
+    localStorage.setItem("enforceNumber", EnforceNumber);
+    localStorage.setItem("damage", damage);
+  }, [EnforceNumber, damage]);
+
   //확률 보여주기
   const probability = getProbability();
   const showProbability = Math.round(probability * 100);
