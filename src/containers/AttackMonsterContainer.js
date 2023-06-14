@@ -1,15 +1,34 @@
-import { useCallback, useState } from "react";
-import { styled } from "styled-components";
+import { useCallback, useState, useEffect } from "react";
+import styled, { css, keyframes } from "styled-components";
+import "../styles/AttackMonster.scss";
+import MonsterProfile from "../module/MonsterProfile";
 
-const NomalMonster = styled.img`
+const blinkAnimation = keyframes`
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const NormalMonster = styled.img`
   width: 200px;
-  height: 200px;
   object-fit: cover;
   cursor: url("/images/attack.png"), auto;
   position: absolute;
-  top: 60%;
-  left: 50%;
+  top: 75%;
+  left: 48%;
   transform: translate(-50%, -50%);
+  transition: all 0.2s ease-in-out;
+  ${({ blink }) =>
+    blink &&
+    css`
+      animation: ${blinkAnimation} 0.5s infinite;
+    `}
 `;
 
 const BossMonster = styled.img`
@@ -18,15 +37,20 @@ const BossMonster = styled.img`
   margin-top: 10px;
   object-fit: cover;
   cursor: url("/images/attack.png"), auto;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const PlayField = styled.div`
   width: 900px;
   height: 550px;
   text-align: center;
-  margin: 0 auto;
+  margin: 10% auto 0;
   background: url("/images/jungle.png");
   background-position: 50% 100%;
+  position: relative;
   .roundNumber {
     font-size: 32px;
     width: 220px;
@@ -38,79 +62,11 @@ const PlayField = styled.div`
     font-weight: bold;
     color: white;
   }
-
-  div:nth-child(2) {
-    margin: 10% auto;
+  div:nth-child(3) {
     div:first-child {
-      margin-top: 10%;
+      margin-top: 6%;
     }
   }
-`;
-
-const HpBar = styled.div`
-  background: red;
-  width: 100px;
-  height: 13px;
-  transition: width 0.3s ease-in-out;
-  margin: 0 auto;
-  position: relative;
-  border: 2px solid red;
-  border-radius: 5px;
-  overflow: hidden;
-  padding: 1px;
-  position: absolute;
-  top: 180px;
-  left: 720px;
-  transform: translate(-50%, -50%);
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: ${({ currentHp, initialHp }) =>
-      ((initialHp - currentHp) / initialHp) * 100}%;
-    background: white;
-    transition: width 0.3s ease-in-out;
-  }
-`;
-
-const BossHpBar = styled.div`
-  background: red;
-  width: 100px;
-  height: 13px;
-  transition: width 0.3s ease-in-out;
-  margin: 0 auto;
-  position: relative;
-  border: 2px solid red;
-  border-radius: 5px;
-  overflow: hidden;
-  padding: 1px;
-  position: absolute;
-  top: 11%;
-  left: 51%;
-  transform: translate(-50%, -50%);
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: ${({ currentHp, initialHp }) =>
-      ((initialHp - currentHp) / initialHp) * 100}%;
-    background: white;
-    transition: width 0.3s ease-in-out;
-  }
-`;
-
-const HpBarText = styled.div`
-  position: absolute;
-  top: -20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 12px;
 `;
 
 const AttackMonsterContainer = ({
@@ -122,11 +78,18 @@ const AttackMonsterContainer = ({
   setRound,
 }) => {
   const [MonsterHp, setMonsterHp] = useState(100);
-  const [BossHp, setBossHp] = useState(1000 + round * 200);
-  const initialMonsterHp =
-    round % 10 === 0 ? 3000 + round * 200 : 80 + round * 20;
+  const [BossHp, setBossHp] = useState(1000);
+  const [showProfile, setshowProfile] = useState(false);
+  const [monsterHeight, setMonsterHeight] = useState(200);
+  const [blink, setBlink] = useState(false);
+  const [isClickable, setIsClickable] = useState(true);
+
+  //최대체력표시
+  const initialMonsterHp = round % 10 === 0 ? round * 100 : 80 + round * 20;
 
   const onclick = useCallback(() => {
+    if (!isClickable) return; // 클릭이 불가능한 경우 빠르게 종료
+
     if (round % 10 === 0) {
       // 보스일 때
       if (BossHp) {
@@ -134,18 +97,23 @@ const AttackMonsterContainer = ({
         if (BossHp - damage <= 0) {
           setRound((prev) => prev + 1);
           setBossHp(0);
-          setBossHp((prev) => prev + 3000 + ++round * 200);
-          setGold((prev) => prev + 15000 + ++round * 200);
-          setGetExp((prev) => prev + 1000 + ++round * 150);
+          console.log(round);
+          setBossHp((round + 1) * 100);
+          setGold((prev) => prev + 15000 + (round + 1) * 200);
+          setGetExp((prev) => prev + 1000 + (round + 1) * 150);
         }
       }
     } else {
       // 보스가 아닐 때
+      if (!showProfile) {
+        setshowProfile(true);
+      }
       if (MonsterHp) {
         if (MonsterHp - damage <= 0) {
           setRound((prev) => prev + 1);
           setGold((prev) => prev + 200 + ++round * 100);
           setGetExp((prev) => prev + 50 + ++round * 50);
+          setshowProfile(false);
           setMonsterHp(0);
           setMonsterHp(80 + ++round * 20);
         } else {
@@ -153,39 +121,68 @@ const AttackMonsterContainer = ({
         }
       }
     }
-  }, [MonsterHp, BossHp, round, damage]);
+    setBlink(true); // 깜빡임 시작
+    setTimeout(() => {
+      setBlink(false); // 일정 시간이 지나면 깜빡임 중지
+    }, 1000);
+
+    setIsClickable(false); // 클릭 비활성화
+    setTimeout(() => {
+      setIsClickable(true); // 1초 후 클릭 가능하도록 활성화
+    }, 500);
+  }, [MonsterHp, BossHp, round, damage, isClickable]);
+
+  useEffect(() => {
+    // 0.5초마다 높이 값을 변경하는 코드
+    const interval = setInterval(() => {
+      const randomHeight = Math.floor(Math.random() * 3) + 198;
+      setMonsterHeight(randomHeight);
+    }, 500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [setMonsterHeight]);
 
   return (
-    <PlayField>
+    <>
       <div className="roundNumber">
         {round % 10 === 0 ? <span>Boss </span> : ""}
         {round}라운드
       </div>
-      <div>
-        {round % 10 === 0 ? (
-          <div>
-            <BossHpBar currentHp={BossHp} initialHp={initialMonsterHp}>
-              <HpBarText>
-                {BossHp}/{initialMonsterHp}
-              </HpBarText>
-            </BossHpBar>
-            <BossMonster onClick={onclick} src="/images/boss.png"></BossMonster>
-          </div>
-        ) : (
-          <div>
-            <HpBar currentHp={MonsterHp} initialHp={initialMonsterHp}>
-              <HpBarText>
-                {MonsterHp}/{initialMonsterHp}
-              </HpBarText>
-            </HpBar>
-            <NomalMonster
-              onClick={onclick}
-              src="/images/monster.png "
-            ></NomalMonster>
-          </div>
-        )}
-      </div>
-    </PlayField>
+      <PlayField>
+        <div>
+          {round % 10 === 0 ? (
+            <div>
+              <MonsterProfile BossHp={BossHp} />
+
+              <BossMonster
+                onClick={onclick}
+                src="/images/boss.png"
+                blink={blink}
+              ></BossMonster>
+            </div>
+          ) : (
+            <div className="nomalMonster">
+              {showProfile ? (
+                <MonsterProfile
+                  MonsterHp={MonsterHp}
+                  initialMonsterHp={initialMonsterHp}
+                />
+              ) : (
+                ""
+              )}
+              <NormalMonster
+                onClick={onclick}
+                src="/images/monster.png "
+                style={{ height: `${monsterHeight}px` }}
+                blink={blink ? "true" : undefined} // 클릭 시에만 blink 활성화
+              ></NormalMonster>
+            </div>
+          )}
+        </div>
+      </PlayField>
+    </>
   );
 };
 
