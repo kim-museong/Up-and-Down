@@ -90,6 +90,8 @@ const GameToolBar = ({
   onClick,
   isArcher,
   setIsArcher,
+  archerDamage,
+  setArcherDamage,
 }) => {
   return (
     <>
@@ -106,9 +108,16 @@ const GameToolBar = ({
         <button onClick={onClick} className="enforce">
           <GiGearHammer /> <span>강화</span>
         </button>
-        <Archer isArcher={isArcher} setIsArcher={setIsArcher} />
-
-        <WorkmanContainer gold={gold} setGold={setGold} />
+        <Archer
+          isArcher={isArcher}
+          setIsArcher={setIsArcher}
+          archerDamage={archerDamage}
+          setArcherDamage={setArcherDamage}
+          gold={gold}
+          setGold={setGold}
+        />
+        {/* 
+        <WorkmanContainer gold={gold} setGold={setGold} /> */}
         <StatusBar>
           <ul>
             <li>레벨: {level}</li>

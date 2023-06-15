@@ -9,7 +9,7 @@ const InforcePage = () => {
   const [damage, setDamage] = useState(() => {
     // 로컬 스토리지에서 공격력 값 로드, 없을 경우 기본 값 10 반환
     const savedDamage = localStorage.getItem("damage");
-    return savedDamage ? parseInt(savedDamage) : 1000;
+    return savedDamage ? parseInt(savedDamage) : 10;
   });
   const [level, setLevel] = useState(1);
   const [exp, setExp] = useState(100);
@@ -17,7 +17,7 @@ const InforcePage = () => {
   const [round, setRound] = useState(1);
   const [stage, setStage] = useState(1);
   const [isArcher, setIsArcher] = useState(false);
-  const [archerDamage, setArcherDamge] = useState(10);
+  const [archerDamage, setArcherDamage] = useState(10);
 
   const nextExp = Math.max(Math.abs(exp - getExp), 0);
 
@@ -68,7 +68,7 @@ const InforcePage = () => {
         exp={exp}
         onClick={onClick}
         archerDamage={archerDamage}
-        setArcherDamge={setArcherDamge}
+        setArcherDamage={setArcherDamage}
         isArcher={isArcher}
         setIsArcher={setIsArcher}
       />
