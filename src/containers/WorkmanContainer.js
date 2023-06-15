@@ -20,7 +20,7 @@ const WorkmanContainer = ({ setGold }) => {
         clearInterval(interval);
       };
     }
-  }, [Workman]);
+  }, [Workman, setGold]);
 
   return <WorkmanComponent addWorkman={addWorkman} Workman={Workman} />;
 };

@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-
+import { useCallback, useEffect, useState } from "react";
+import "../styles/share.scss";
 //css로 보낼때는 소문자로 보내야한다!!
 
 const HpBar = styled.div`
+  font-family: "Black And White Picture", sans-serif;
   background: red;
   width: 200px;
   height: 15px;
@@ -15,7 +16,7 @@ const HpBar = styled.div`
   overflow: hidden;
   padding: 1px;
   position: absolute;
-  top: 68%;
+  top: 74%;
   left: 57%;
   transform: translate(-50%, -50%);
 
@@ -41,15 +42,17 @@ const FixedHpBar = styled(HpBar)`
 
 const HpBarText = styled.div`
   position: absolute;
-  top: -20%;
+  top: -12%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 12px;
+  font-size: 15px;
   font-weight: bold;
   color: white;
 `;
 
 const MonsterProfileBox = styled.div`
+  font-size: 20px;
+  font-family: "Black And White Picture", sans-serif;
   width: 300px;
   height: 50px;
   background-color: rgba(50, 50, 50, 0.7);
@@ -62,10 +65,21 @@ const MonsterProfileBox = styled.div`
 
 const MonsterProfileIamge = styled.div`
   background-color: rgba(50, 50, 50, 0.9);
-  background-image: url("/images/monster.png");
-  background-position: 46% 18%;
+  background-image: url(${({ stage }) => `/images/stage${stage}normal.png`});
+  background-position: ${({ stage }) => {
+    switch (stage) {
+      case 1:
+        return "47% 16%";
+      case 2:
+        return "53% 26%";
+      case 3:
+        return "48% 32%";
+      default:
+        return "53% 26%"; // 기본값
+    }
+  }};
   position: absolute;
-  top: 49%;
+  top: 50%;
   left: 8%;
   border: 3px solid rgba(50, 50, 50, 0.7);
   transform: translate(-50%, -50%);
@@ -76,10 +90,21 @@ const MonsterProfileIamge = styled.div`
 
 const BossProfileIamge = styled.div`
   background-color: rgba(50, 50, 50, 0.9);
-  background-image: url("/images/Boss.png");
-  background-position: 55% 23%;
+  background-image: url(${({ stage }) => `/images/stage${stage}boss.png`});
+  background-position: ${({ stage }) => {
+    switch (stage) {
+      case 1:
+        return "55% 23%";
+      case 2:
+        return "45% 13%";
+      case 3:
+        return "48% 32%";
+      default:
+        return "53% 26%"; // 기본값
+    }
+  }};
   position: absolute;
-  top: 49%;
+  top: 51%;
   left: 8%;
   border: 3px solid rgba(50, 50, 50, 0.7);
   transform: translate(-50%, -50%);
@@ -93,18 +118,50 @@ const MonsterName = styled.span`
   margin-left: 47px;
 `;
 
-const MonsterProfile = ({ MonsterHp, initialMonsterHp, BossHp }) => {
+const MonsterProfile = ({ MonsterHp, initialMonsterHp, BossHp, stage }) => {
   const [currentHp, setCurrentHp] = useState(MonsterHp ? MonsterHp : BossHp);
 
   useEffect(() => {
     setCurrentHp(MonsterHp ? MonsterHp : BossHp);
   }, [MonsterHp, BossHp]);
 
+  const normalMonsterName = useCallback((stage) => {
+    switch (stage) {
+      case 1:
+        return "졸개병사";
+      case 2:
+        return "고블린";
+      case 3:
+        return "미정%";
+      default:
+        return "미정%"; // 기본값
+    }
+  }, []);
+
+  const bossName = useCallback((stage) => {
+    switch (stage) {
+      case 1:
+        return "타락한 드루이드";
+      case 2:
+        return "오크";
+      case 3:
+        return "미정";
+      default:
+        return "미정"; // 기본값
+    }
+  }, []);
+
   return (
     <>
       <MonsterProfileBox>
-        {MonsterHp ? <MonsterProfileIamge /> : <BossProfileIamge />}
-        <MonsterName>{MonsterHp ? "졸개병사" : "타락한 드루이드"}</MonsterName>
+        {MonsterHp ? (
+          <MonsterProfileIamge stage={stage} />
+        ) : (
+          <BossProfileIamge stage={stage} />
+        )}
+        <MonsterName>
+          {MonsterHp ? normalMonsterName(stage) : bossName(stage)}
+        </MonsterName>
         <FixedHpBar currenthp={currentHp} initialhp={initialMonsterHp}>
           <HpBarText>
             {MonsterHp ? MonsterHp : BossHp}/{initialMonsterHp}

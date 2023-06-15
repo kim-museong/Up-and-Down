@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import EnforceContainer from "../containers/EnforceContainer";
-import WorkmanContainer from "../containers/WorkmanContainer";
+
 import AttackMonsterContainer from "../containers/AttackMonsterContainer";
+import GameToolBar from "../module/GameToolBar";
 
 const InforcePage = () => {
   const [showEnforce, setShowEnforce] = useState(false);
@@ -9,12 +9,15 @@ const InforcePage = () => {
   const [damage, setDamage] = useState(() => {
     // 로컬 스토리지에서 공격력 값 로드, 없을 경우 기본 값 10 반환
     const savedDamage = localStorage.getItem("damage");
-    return savedDamage ? parseInt(savedDamage) : 10;
+    return savedDamage ? parseInt(savedDamage) : 1000;
   });
   const [level, setLevel] = useState(1);
   const [exp, setExp] = useState(100);
   const [getExp, setGetExp] = useState(0);
   const [round, setRound] = useState(1);
+  const [stage, setStage] = useState(1);
+  const [isArcher, setIsArcher] = useState(false);
+  const [archerDamage, setArcherDamge] = useState(10);
 
   const nextExp = Math.max(Math.abs(exp - getExp), 0);
 
@@ -49,23 +52,26 @@ const InforcePage = () => {
         setGetExp={setGetExp}
         round={round}
         setRound={setRound}
+        stage={stage}
+        isArcher={isArcher}
+        setStage={setStage}
+        archerDamage={archerDamage}
       />
-
-      {showEnforce && (
-        <EnforceContainer
-          setGold={setGold}
-          gold={gold}
-          damage={damage}
-          setDamage={setDamage}
-        />
-      )}
-
-      <p>
-        레벨: {level} | {gold} 원 | 공격력: {damage} | 경험치: {getExp}/{exp}
-      </p>
-      <button onClick={onClick}>강화</button>
-
-      <WorkmanContainer gold={gold} setGold={setGold} />
+      <GameToolBar
+        showEnforce={showEnforce}
+        setGold={setGold}
+        gold={gold}
+        damage={damage}
+        setDamage={setDamage}
+        level={level}
+        getExp={getExp}
+        exp={exp}
+        onClick={onClick}
+        archerDamage={archerDamage}
+        setArcherDamge={setArcherDamge}
+        isArcher={isArcher}
+        setIsArcher={setIsArcher}
+      />
     </>
   );
 };
